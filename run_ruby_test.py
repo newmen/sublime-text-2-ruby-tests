@@ -148,14 +148,17 @@ class BaseRubyTask(sublime_plugin.TextCommand):
     global COMMAND_PREFIX
     COMMAND_PREFIX = COMMAND_PREFIX + " spring "
 
-  def rbenv_or_rvm(self, s, rbenv, rvm):
-    which = os.popen('which rbenv').read().split('\n')[0]
-    brew = '/usr/local/bin/rbenv'
-    rbenv_cmd = os.path.expanduser('~/.rbenv/bin/rbenv')
-    rvm_cmd = os.path.expanduser('~/.rvm/bin/rvm-auto-ruby')
+  def find_ver_manager(self, bin_name, local_dir, home_dir):
+    which_path = os.popen('which ' + bin_name).read().split('\n')[0]
+    local_path = local_dir + '/bin/' + bin_name
 
-    if os.path.isfile(brew): rbenv_cmd = brew
-    elif os.path.isfile(which): rbenv_cmd = which
+    if os.path.isfile(local_path): return local_path
+    elif os.path.isfile(which_path): return which_path
+    else: return os.path.expanduser('~/' + home_dir + '/bin/' + bin_name)
+
+  def rbenv_or_rvm(self, s, rbenv, rvm):
+    rbenv_cmd = self.find_ver_manager('rbenv', '/usr/local', '.rbenv')
+    rvm_cmd = self.find_ver_manager('rvm-auto-ruby', '/usr/local/rvm', '.rvm')
 
     global COMMAND_PREFIX
     if rbenv and self.is_executable(rbenv_cmd):
