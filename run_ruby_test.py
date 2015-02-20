@@ -134,7 +134,7 @@ class BaseRubyTask(sublime_plugin.TextCommand):
     global SYNTAX; SYNTAX = s.get('syntax')
     global THEME; THEME = s.get('theme')
     global TERMINAL_ENCODING; TERMINAL_ENCODING = s.get('terminal_encoding')
-
+    global INTERNAL_DIR; INTERNAL_DIR = s.get("internal_dir")
 
     rbenv   = s.get("check_for_rbenv")
     rvm     = s.get("check_for_rvm")
@@ -202,6 +202,9 @@ class BaseRubyTask(sublime_plugin.TextCommand):
     self.save_test_run(command, working_dir)
     if COMMAND_PREFIX:
       command = COMMAND_PREFIX + ' ' + command
+    if INTERNAL_DIR and INTERNAL_DIR != ".":
+      command = re.sub(r"" + INTERNAL_DIR + "\/", "", command)
+      working_dir += "/" + INTERNAL_DIR
     if int(sublime.version().split('.')[0]) <= 2:
       command = [command]
     self.view.window().run_command("exec", {

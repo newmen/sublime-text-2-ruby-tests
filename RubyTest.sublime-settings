@@ -32,6 +32,8 @@
   "theme": "Packages/RubyTest/TestConsole.hidden-tmTheme",
   "syntax": "Packages/RubyTest/TestConsole.tmLanguage",
 
-  "terminal_encoding": "utf-8"
+  "terminal_encoding": "utf-8",
 
+  // the internal project directory where ruby code is located and "spec" directory presented
+  "internal_dir": "."
 }
